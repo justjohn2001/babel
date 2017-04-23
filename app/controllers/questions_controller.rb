@@ -2,12 +2,17 @@ class QuestionsController < ApplicationController
   def show
     question = Question.includes(:answers, :user).find(params[:id])
     
-    output = question.to_json
+    output = question.as_json
+    output["user_name"] = question.user.name
+
+    output["answers"] = []
 
     question.answers.each do |answer|
-      output = output + "<br>" + answer.to_json
+      answer_hash = answer.as_json
+      answer_hash["user_name"] = answer.user.name
+      output["answers"].push(answer_hash)
     end
-    render :html => output 
+    render :json => output 
 
   end
 end
