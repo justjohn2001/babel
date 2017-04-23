@@ -33,6 +33,16 @@ class QuestionsController < ApplicationController
         render :status => 403, :text => "Bad API Key"
         return
       end
+
+      # probably a way to define it in the model and use chaining, but... noob
+      stats = TenantStat.where(:tenant_id => tenant.id).take
+      if stats
+        stats.update(:request_count => stats.request_count + 1)
+      else
+        stats = TenantStat.new(:tenant => tenant, :request_count => 1)
+      end
+      stats.save
+
       return tenant
     end
 end
