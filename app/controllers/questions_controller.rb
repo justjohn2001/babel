@@ -1,5 +1,7 @@
 class QuestionsController < ApplicationController
   def show
+    return if !get_tenant
+
     question = Question.includes(:answers, :user).where("id = ? and private = ?", params[:id], false).take
     
     output = question.as_json
@@ -17,4 +19,20 @@ class QuestionsController < ApplicationController
     render :json => output 
 
   end
+
+  private 
+    def get_tenant
+      # would probably be used in other request types, so factor it out
+      if !params[:key]
+        render :status => 403, :text => "Missing API Key"
+        return
+      end
+      
+      tenant = Tenant.where(:api_key => params[:key]).take
+      if !tenant
+        render :status => 403, :text => "Bad API Key"
+        return
+      end
+      return tenant
+    end
 end
