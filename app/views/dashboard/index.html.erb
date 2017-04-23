@@ -1,0 +1,21 @@
+<h1>Dashboard</h1>
+<p>
+Users: <%= @user_count %>
+</p>
+<p>
+Questions: <%= @question_count %>
+</p>
+<p>
+Answers: <%= @answer_count %>
+</p>
+<h2>Tenants</h2>
+<table>
+<tr><th>Name</th><th>Request Count</th></tr>
+<% @tenants.each do |t| %>
+<tr>
+  <td><%= t.name %></td>
+  <td><%= t.request_count %>
+</tr>
+<% end %>
+</table>
+
